@@ -19,35 +19,6 @@ class OkaFrameApp:
        return response(environ, start_response)
     
 
-    # def handle_request(self, request):
-    #     response = Response()
-    #     handler_data, kwargs = self.find_handler(request)
-
-    #     if handler_data is not None:
-    #         handler = handler_data["handler"]
-    #         allowed_methods = handler_data["allowed_methods"]
-
-    #         if inspect.isclass(handler):
-    #             handler = getattr(handler(), request.method.lower(), None)
-    #             ic(handler)
-
-    #             if handler is None:
-    #                 return self.method_not_allowed(response)
-    #         else:
-    #             if request.method.lower() not in allowed_methods:
-    #                 return self.method_not_allowed(response)
-
-    #         try:
-    #             handler(request, response, **kwargs)
-    #         except Exception as e:
-    #             if self.exception_handler is not None:
-    #                 self.exception_handler(request, response, e)
-    #             else:
-    #                 raise e
-    #     else:
-    #         self.default_response(response)
-    #     return response
-
     def handle_request(self, request):
         response = Response()
         
@@ -63,8 +34,8 @@ class OkaFrameApp:
                     return response
                 else:
                      handler_function(request, response, **kwargs)
-                
-            handler(request, response, **kwargs)
+            else:   
+                handler(request, response, **kwargs)
         else: 
             self.defult_response(response)
 
@@ -79,6 +50,7 @@ class OkaFrameApp:
                 return handler, parsed_result.named
         
         return None, None
+
 
     def defult_response(self, response):
         response.text = "Not Found!"
