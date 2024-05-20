@@ -28,3 +28,11 @@ def new_handler(req, resp):
     resp.text = "From new handler"
 
 app.add_route("/new-handler", new_handler)
+
+
+@app.route("/template")
+def template_handler(req, resp):
+    resp.body = app.template(
+        "home.html",
+        contex={"new_title":"New Title", "new_body":"New Body..."}
+    )
