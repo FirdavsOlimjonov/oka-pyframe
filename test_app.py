@@ -53,11 +53,32 @@ def test_class_based_get(app, test_client):
     assert test_client.get("http://testserver/books").text == "Books page"
 
 
-# def test_class_based_post(app, test_client):
-#     @app.route("/books")
-#     class Books: 
-#         def post(self, request, response):
-#             response.text = "Books post method"
+def test_class_based_post(app, test_client):
+    @app.route("/books")
+    class Books: 
+        def post(self, request, response):
+            response.text = "Books post method"
 
-#     assert test_client.post("http://testserver/books").text == "Books post method"
+    assert test_client.post("http://testserver/books").text == "Books post method"
+
+
+def test_class_based_method_not_found(app, test_client):
+    @app.route("/books")
+    class Books: 
+        def post(self, request, response):
+            response.text = "Books post method"
+
+    response = test_client.get("http://testserver/books")
+
+    assert response.text == "Method not found!"
+    assert response.status_code == 405
+
+
+def test_alternative_adding_route(app, test_client):
+    def new_handler(req, resp):
+        resp.text = "From new handler"
+    
+    app.add_route("/new-handler", new_handler)
+
+    assert test_client.get("http://testserver/new-handler").text == "From new handler"
 

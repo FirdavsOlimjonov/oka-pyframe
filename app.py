@@ -56,15 +56,15 @@ class OkaFrameApp:
         response.text = "Not Found!"
         response.status_code = 404
     
-    
-    def route(self, path):
+
+    def add_route(self, path, handler):
         assert path not in self.routes, "Duplicate route, please change the URL."
+        self.routes[path] = handler
+    
 
-        # if path in self.routes:
-        #     raise AssertionError("Duplicate route, please change the URL.")
-
+    def route(self, path):
         def wrapper(handler):
-            self.routes[path] = handler
+            self.add_route(path, handler)
             return handler
         
         return wrapper
