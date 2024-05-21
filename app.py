@@ -18,6 +18,8 @@ class OkaFrameApp:
             loader=FileSystemLoader(os.path.abspath(templates_dir))
         )
 
+        self.exception_handler = None
+
     def __call__(self, environ, start_response):
        request = Request(environ)
        response = self.handle_request(request)
@@ -40,8 +42,14 @@ class OkaFrameApp:
                     return response
                 else:
                      handler_function(request, response, **kwargs)
-            else:   
-                handler(request, response, **kwargs)
+            else: 
+                try:  
+                    handler(request, response, **kwargs)
+                except Exception as e:
+                    if self.exception_handler is not None:
+                        self.exception_handler(request, response, e)
+                    else:
+                        raise e
         else: 
             self.defult_response(response)
 
@@ -87,3 +95,7 @@ class OkaFrameApp:
             contex = {}
         
         return self.template_env.get_template(template_name).render(**contex).encode()
+
+
+    def add_expetion_handler(self, handler):
+        self.exception_handler = handler

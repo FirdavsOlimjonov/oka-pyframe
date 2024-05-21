@@ -36,3 +36,15 @@ def template_handler(req, resp):
         "home.html",
         contex={"new_title":"New Title", "new_body":"New Body..."}
     )
+
+
+def on_exception(req, resp, exc):
+    resp.text = "Something bad happened"
+
+
+app.add_expetion_handler(on_exception)
+
+
+@app.route("/exception")
+def exception_throwing_handler(req, resp):
+    raise AssertionError("some error")
