@@ -1,5 +1,4 @@
 
-from typing import Any
 from webob import Request, Response
 from parse import parse
 import inspect
